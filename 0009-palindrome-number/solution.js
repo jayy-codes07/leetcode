@@ -3,8 +3,17 @@
  * @return {boolean}
  */
 var isPalindrome = function (x) {
-    return x < 0 ? false : x === +x.toString().split("").reverse().join("")
+     if(Math.abs(x) !== x ) return false
+    
+    let rev = 0
+    let valx = x
+    while(valx > 0){
+       let reminder = valx % 10 
+       rev = rev * 10 + reminder
+       valx = Math.floor(valx / 10) 
+    }
+    if(rev == x) return true
+    else return false
 };
 
 console.log(isPalindrome(10011));
-
