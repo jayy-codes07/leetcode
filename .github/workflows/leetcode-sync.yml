@@ -9,7 +9,24 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
+      - name: Verify LeetCode session is valid
+        id: auth-check
+        run: |
+          response="$(curl -sS 'https://leetcode.com/graphql/' \
+            -H 'Content-Type: application/json' \
+            -H "x-csrftoken: ${{ secrets.LEETCODE_CSRF_TOKEN }}" \
+            -H "Cookie: csrftoken=${{ secrets.LEETCODE_CSRF_TOKEN }}; LEETCODE_SESSION=${{ secrets.LEETCODE_SESSION }}" \
+            --data-raw '{"query":"query recentAcSubmissions($offset: Int!, $limit: Int!) { submissionList(offset: $offset, limit: $limit) { submissions { id } } }","variables":{"offset":0,"limit":1}}')"
+
+          if echo "$response" | jq -e '.data.submissionList.submissions | type == "array"' >/dev/null; then
+            echo "auth_valid=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::LeetCode session is invalid or expired. Skipping sync. Refresh LEETCODE_SESSION and LEETCODE_CSRF_TOKEN secrets."
+            echo "auth_valid=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Sync LeetCode submissions
+        if: steps.auth-check.outputs.auth_valid == 'true'
         uses: joshcai/leetcode-sync@v1.7
         with:
           github-token: ${{ github.token }}
