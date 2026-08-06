@@ -4,10 +4,10 @@
  * @return {number[]}
  */
 var shuffle = function (nums, n) {
-    let result = [];
+    let response = []
     for (let i = 0; i < n; i++) {
-        result.push(nums[i])
-        result.push(nums[n + i])
+        response.push(nums[i])
+        response.push(nums[nums.length - n + i])
     }
-    return result
+    return response
 };
