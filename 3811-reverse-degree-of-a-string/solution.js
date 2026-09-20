@@ -3,11 +3,11 @@
  * @return {number}
  */
 var reverseDegree = function (s) {
-    let result = 0
-    for (let i = 0; i < s.length; i++) {
-        let char = s[i]
-        let num = 123 - char.charCodeAt(0)
-        result += num * (i + 1)
+    let total = 0
+    let mul = 1
+    for (ind in s) {
+        total += (123 - s[ind].charCodeAt(0)) * mul
+        mul++
     }
-    return result
+    return total
 };
