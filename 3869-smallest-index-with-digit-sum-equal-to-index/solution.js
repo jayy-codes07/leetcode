@@ -4,9 +4,9 @@
  */
 var smallestIndex = function (nums) {
     for (let i = 0; i < nums.length; i++) {
-        let sum = nums[i].toString().split("")
-        let ans = sum.reduce((acc, num) => acc + Number(num), 0);
-        if (i == ans) return i
+        let temp = nums[i].toString().split("")
+        let sum = temp.reduce((acc, curr) => Number(curr) + Number(acc), 0)
+        if (i === Number(sum)) return i
     }
     return -1
 };
